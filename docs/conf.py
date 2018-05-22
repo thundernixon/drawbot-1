@@ -20,13 +20,14 @@ import time
 # some hacking
 # support read the docs and the missing packages
 
+
 class MetaMock(type):
 
     def __getattr__(self, name):
         return self
 
 
-class Mock(object):
+class Mock(object, metaclass=MetaMock):
 
     __metaclass__ = MetaMock
 
@@ -372,7 +373,7 @@ class DownloadCode(CodeBlock):
         # set it as filename
         self.options['filename'] = fileName
         # encode the whole content
-        self.content = [unicode(line) for line in self.content]
+        self.content = [str(line) for line in self.content]
         # call parent class
         nodes = super(DownloadCode, self).run()
         # get the content and encode
@@ -386,7 +387,7 @@ class DownloadCode(CodeBlock):
         self.options["filename"] = fileName
         # write to disk
         f = open(path, "w")
-        f.write(code.encode("utf-8"))
+        f.write(code.decode("utf-8"))
         f.close()
         # add example image if present
         imageBaseName, _ = os.path.splitext(fileName)
